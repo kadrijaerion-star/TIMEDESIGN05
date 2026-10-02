@@ -1,192 +1,477 @@
 <!DOCTYPE html>
 <html lang="sq">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>TimeDesign | Admin</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css">
+
 </head>
+
 
 <body>
 
-    <header>
-        <div class="logo">
-            Time<span>Design</span>
+
+    <!-- ================================= -->
+    <!-- ADMIN LOGIN -->
+    <!-- ================================= -->
+
+    <div
+        id="loginPage"
+        style="
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background:#f5f5f5;
+            padding:20px;
+        ">
+
+        <div
+            style="
+                width:100%;
+                max-width:400px;
+                background:white;
+                padding:40px;
+                border-radius:15px;
+                box-shadow:0 10px 40px rgba(0,0,0,0.12);
+            ">
+
+            <div
+                style="
+                    text-align:center;
+                    margin-bottom:30px;
+                ">
+
+                <div
+                    class="logo"
+                    style="
+                        font-size:30px;
+                        margin-bottom:10px;
+                    ">
+                    Time<span>Design</span>
+                </div>
+
+                <h2>
+                    Admin Panel
+                </h2>
+
+                <p>
+                    Hyni për të menaxhuar produktet
+                </p>
+
+            </div>
+
+
+            <!-- USERNAME -->
+
+            <label>
+                Username
+            </label>
+
+            <input
+                type="text"
+                id="loginUsername"
+                placeholder="Username"
+                autocomplete="username"
+                style="
+                    width:100%;
+                    padding:14px;
+                    margin:8px 0 18px;
+                    border:1px solid #ddd;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                ">
+
+
+            <!-- PASSWORD -->
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+                autocomplete="current-password"
+                style="
+                    width:100%;
+                    padding:14px;
+                    margin:8px 0 10px;
+                    border:1px solid #ddd;
+                    border-radius:8px;
+                    box-sizing:border-box;
+                ">
+
+
+            <!-- ERROR -->
+
+            <p
+                id="loginError"
+                style="
+                    display:none;
+                    color:#d00;
+                    text-align:center;
+                    margin:10px 0;
+                ">
+                Username ose password gabim!
+            </p>
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                onclick="loginAdmin()"
+                style="
+                    width:100%;
+                    padding:14px;
+                    border:none;
+                    border-radius:8px;
+                    cursor:pointer;
+                    font-size:16px;
+                    margin-top:10px;
+                ">
+
+                Hyr në Admin
+
+            </button>
+
+
+            <div
+                style="
+                    text-align:center;
+                    margin-top:20px;
+                ">
+
+                <a href="index.html">
+                    ← Kthehu në faqe
+                </a>
+
+            </div>
+
         </div>
 
-        <nav>
-            <a href="index.html">Shfaq Showroom</a>
-        </nav>
-    </header>
+    </div>
 
 
-    <main style="padding-top: 120px; padding-bottom: 80px;">
+
+    <!-- ================================= -->
+    <!-- ADMIN PANEL -->
+    <!-- ================================= -->
+
+    <div
+        id="adminPanel"
+        style="display:none;">
+
+
+        <!-- HEADER -->
+
+        <header>
+
+            <div class="logo">
+                Time<span>Design</span>
+            </div>
+
+            <nav>
+
+                <a href="index.html">
+                    Shiko faqen
+                </a>
+
+                <a
+                    href="#"
+                    onclick="logoutAdmin(); return false;">
+                    Dil
+                </a>
+
+            </nav>
+
+        </header>
+
+
+
+        <!-- ================================= -->
+        <!-- SHTO PRODUKT -->
+        <!-- ================================= -->
+
+        <section
+            id="add-product"
+            class="section">
+
+            <div class="section-title">
+
+                <p>
+                    ADMIN
+                </p>
+
+                <h2>
+                    Shto produkt
+                </h2>
+
+            </div>
+
+
+            <!-- EMRI -->
+
+            <label>
+                Emri i produktit
+            </label>
+
+            <input
+                type="text"
+                id="productName"
+                placeholder="P.sh. Sallon Modern">
+
+
+            <!-- KATEGORIA -->
+
+            <label>
+                Kategoria
+            </label>
+
+            <select id="productCategory">
+
+                <option value="Dhoma dite">
+                    Dhoma dite
+                </option>
+
+                <option value="Dhoma gjumi">
+                    Dhoma gjumi
+                </option>
+
+                <option value="Kuzhina">
+                    Kuzhina
+                </option>
+
+                <option value="Gardëroba">
+                    Gardëroba
+                </option>
+
+            </select>
+
+
+            <!-- FOTO -->
+
+            <label>
+                Fotografia
+            </label>
+
+            <input
+                type="file"
+                id="productImage"
+                accept="image/*">
+
+
+            <!-- PREVIEW -->
+
+            <div
+                id="imagePreview">
+            </div>
+
+
+            <!-- PËRSHKRIMI -->
+
+            <label>
+                Përshkrimi
+            </label>
+
+            <textarea
+                id="productDescription"
+                placeholder="Përshkrimi i produktit">
+            </textarea>
+
+
+            <!-- DIMENSIONET -->
+
+            <label>
+                Dimensionet
+            </label>
+
+            <input
+                type="text"
+                id="productDimensions"
+                placeholder="P.sh. 250 x 180 cm">
+
+
+            <!-- MATERIALI -->
+
+            <label>
+                Materiali
+            </label>
+
+            <input
+                type="text"
+                id="productMaterial"
+                placeholder="P.sh. MDF, dru...">
+
+
+            <!-- BUTONI -->
+
+            <button
+                onclick="addProduct()">
+
+                Shto produkt
+
+            </button>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- PRODUKTET -->
+        <!-- ================================= -->
 
         <section class="section">
 
             <div class="section-title">
-                <p>TIME DESIGN</p>
-                <h2>Admin Panel</h2>
+
+                <p>
+                    TIME DESIGN
+                </p>
+
+                <h2>
+                    Produktet
+                </h2>
+
             </div>
 
 
-            <div class="contact-box">
-
-                <div>
-                    <h3>➕ Shto produkt</h3>
-
-                    <p>
-                        Krijo produkte të reja për showroom-in.
-                    </p>
-
-                    <br>
-
-                    <button onclick="openAddProduct()">
-                        Shto produkt
-                    </button>
-                </div>
-
-
-                <div>
-                    <h3>🛋️ Produktet</h3>
-
-                    <p>
-                        Shiko dhe menaxho produktet.
-                    </p>
-
-                    <br>
-
-                    <button onclick="showProducts()">
-                        Shiko produktet
-                    </button>
-                </div>
-
-
-                <div>
-                    <h3>🌐 Showroom</h3>
-
-                    <p>
-                        Hape faqen publike.
-                    </p>
-
-                    <br>
-
-                    <a href="index.html" class="hero-btn">
-                        Hap showroom
-                    </a>
-                </div>
-
+            <div
+                id="adminProducts"
+                class="products">
             </div>
 
         </section>
 
 
-        <section id="add-product" class="section" style="display:none;">
-
-            <div class="section-title">
-                <p>ADMIN</p>
-                <h2>Shto produkt</h2>
-            </div>
+    </div>
 
 
-            <div class="modal-content" style="margin:auto;">
 
-                <label>Emri i produktit</label>
+    <!-- ================================= -->
+    <!-- LOGIN JAVASCRIPT -->
+    <!-- ================================= -->
 
-                <input
-                    type="text"
-                    id="productName"
-                    placeholder="p.sh. Sallon Milano"
-                >
+    <script>
 
-
-                <label>Kategoria</label>
-
-                <select id="productCategory">
-
-                    <option value="Dhoma dite">
-                        Dhoma dite
-                    </option>
-
-                    <option value="Dhoma gjumi">
-                        Dhoma gjumi
-                    </option>
-
-                    <option value="Kuzhina">
-                        Kuzhina
-                    </option>
-
-                    <option value="Gardëroba">
-                        Gardëroba
-                    </option>
-
-                </select>
-
-<label>Fotografia e produktit</label>
-
-<input
-    type="file"
-    id="productImage"
-    accept="image/*"
->
-
-<div id="imagePreview" style="margin-top:15px;"></div>
+        const ADMIN_USERNAME = "timedesign";
+        const ADMIN_PASSWORD = "1234567890";
 
 
-                <label>Përshkrimi</label>
+        function loginAdmin() {
 
-                <textarea
-                    id="productDescription"
-                    placeholder="Përshkrimi i produktit..."
-                ></textarea>
+            const username =
+                document.getElementById(
+                    "loginUsername"
+                ).value.trim();
 
-
-                <label>Dimensionet</label>
-
-                <input
-                    type="text"
-                    id="productDimensions"
-                    placeholder="280 x 190 cm"
-                >
+            const password =
+                document.getElementById(
+                    "loginPassword"
+                ).value;
 
 
-                <label>Materiali</label>
+            if (
+                username === ADMIN_USERNAME &&
+                password === ADMIN_PASSWORD
+            ) {
 
-                <input
-                    type="text"
-                    id="productMaterial"
-                    placeholder="MDF"
-                >
+                sessionStorage.setItem(
+                    "timeDesignAdmin",
+                    "true"
+                );
+
+                showAdminPanel();
+
+            } else {
+
+                document.getElementById(
+                    "loginError"
+                ).style.display = "block";
+
+            }
+
+        }
 
 
-                <br><br>
+        function showAdminPanel() {
 
-                <button onclick="addProduct()">
-                    Ruaj produktin
-                </button>
+            document.getElementById(
+                "loginPage"
+            ).style.display = "none";
 
-            </div>
+            document.getElementById(
+                "adminPanel"
+            ).style.display = "block";
 
-        </section>
+        }
 
 
-        <section id="product-list" class="section">
+        function logoutAdmin() {
 
-            <div class="section-title">
-                <p>MENAXHIMI</p>
-                <h2>Produktet</h2>
-            </div>
+            sessionStorage.removeItem(
+                "timeDesignAdmin"
+            );
 
-            <div id="adminProducts" class="products"></div>
+            location.reload();
 
-        </section>
+        }
 
-    </main>
 
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                if (
+                    sessionStorage.getItem(
+                        "timeDesignAdmin"
+                    ) === "true"
+                ) {
+
+                    showAdminPanel();
+
+                }
+
+            }
+        );
+
+
+        document.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key === "Enter" &&
+                    document.getElementById(
+                        "loginPage"
+                    ).style.display !== "none"
+                ) {
+
+                    loginAdmin();
+
+                }
+
+            }
+        );
+
+    </script>
+
+
+    <!-- ADMIN JS -->
 
     <script src="admin.js"></script>
 
 </body>
+
 </html>
