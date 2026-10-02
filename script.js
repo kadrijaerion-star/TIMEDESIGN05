@@ -1,34 +1,81 @@
-// ==========================================
-// TIMEDESIGN - SHOWROOM
-// ==========================================
+const SUPABASE_URL =
+    "https://gpwqcfjdwwwlwutcuizpx.supabase.co";
 
-let products = JSON.parse(
-    localStorage.getItem("timeDesignProducts")
-) || [];
+const SUPABASE_KEY =
+    "sb_publishable_4V3NG02ni7eC6LduWqHjxA_-3s2DZgj";
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 
-// ==========================================
-// SHOWROOM - SHFAQ PRODUKTET
-// ==========================================
+// =====================================
+// MERR PRODUKTET NGA SUPABASE
+// =====================================
 
-function renderProducts() {
+async function loadProducts() {
 
     const container =
         document.getElementById("showroomProducts");
 
     if (!container) return;
 
+
+    container.innerHTML = `
+        <div class="no-products">
+            <p>Duke ngarkuar produktet...</p>
+        </div>
+    `;
+
+
+    const {
+        data: products,
+        error
+    } = await supabaseClient
+        .from("products")
+        .select("*")
+        .order("created_at", {
+            ascending: false
+        });
+
+
+    if (error) {
+
+        console.error(
+            "Gabim Supabase:",
+            error
+        );
+
+        container.innerHTML = `
+            <div class="no-products">
+                <h3>Nuk u ngarkuan produktet</h3>
+                <p>Ju lutem provoni përsëri.</p>
+            </div>
+        `;
+
+        return;
+    }
+
+
     container.innerHTML = "";
 
-    if (products.length === 0) {
+
+    if (!products || products.length === 0) {
+
         container.innerHTML = `
             <div class="no-products">
                 <h3>Nuk ka produkte</h3>
-                <p>Produktet e reja do të shfaqen këtu.</p>
+                <p>
+                    Produktet e reja do të shfaqen këtu.
+                </p>
             </div>
         `;
+
         return;
     }
+
 
     products.forEach(product => {
 
@@ -37,69 +84,105 @@ function renderProducts() {
 
         card.className = "product";
 
+
+        const image =
+            product.image
+                ? `
+                    <img
+                        src="${escapeHtml(product.image)}"
+                        alt="${escapeHtml(product.name)}"
+                    >
+                  `
+                : `
+                    <span>FOTO</span>
+                  `;
+
+
         card.innerHTML = `
 
             <div class="product-image">
-
-                ${
-                    product.image
-                        ? `
-                            <img
-                                src="${product.image}"
-                                alt="${product.name}"
-                            >
-                          `
-                        : `
-                            <span>FOTO</span>
-                          `
-                }
-
+                ${image}
             </div>
+
 
             <div class="product-info">
 
-                <h3>${product.name}</h3>
+                <h3>
+                    ${escapeHtml(product.name)}
+                </h3>
+
 
                 ${
                     product.category
-                        ? `<p>${product.category}</p>`
+                        ? `
+                            <p>
+                                ${escapeHtml(product.category)}
+                            </p>
+                          `
                         : ""
                 }
 
+
                 <button
-                    onclick="showProductById(${product.id})">
+                    type="button"
+                    onclick="showProduct(${product.id})">
+
                     Shiko detajet
+
                 </button>
 
             </div>
+
         `;
 
+
         container.appendChild(card);
+
     });
+
 }
 
 
-// ==========================================
+
+// =====================================
 // SHFAQ DETAJET E PRODUKTIT
-// ==========================================
+// =====================================
 
-function showProductById(id) {
+async function showProduct(id) {
 
-    const product =
-        products.find(p => p.id === id);
+    const {
+        data: product,
+        error
+    } = await supabaseClient
+        .from("products")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-    if (!product) return;
+
+    if (error || !product) {
+
+        console.error(error);
+
+        return;
+    }
+
 
     const modal =
         document.getElementById("modal");
 
+
     if (!modal) return;
+
 
     const title =
         document.getElementById("modal-title");
 
     const image =
         document.getElementById("modal-image");
+
+    const category =
+        document.getElementById("modal-category");
 
     const description =
         document.getElementById("modal-description");
@@ -110,90 +193,148 @@ function showProductById(id) {
     const material =
         document.getElementById("modal-material");
 
-    const category =
-        document.getElementById("modal-category");
 
     if (title) {
-        title.textContent = product.name;
+        title.textContent =
+            product.name || "";
     }
+
 
     if (image) {
 
         if (product.image) {
-            image.src = product.image;
-            image.style.display = "block";
+
+            image.src =
+                product.image;
+
+            image.alt =
+                product.name || "Produkt";
+
+            image.style.display =
+                "block";
+
         } else {
-            image.style.display = "none";
+
+            image.style.display =
+                "none";
+
         }
+
     }
+
 
     if (category) {
+
         category.textContent =
             product.category || "";
+
     }
+
 
     if (description) {
+
         description.textContent =
             product.description || "";
+
     }
+
 
     if (dimensions) {
+
         dimensions.textContent =
             product.dimensions || "";
+
     }
+
 
     if (material) {
+
         material.textContent =
             product.material || "";
+
     }
 
-    modal.style.display = "flex";
+
+    modal.style.display =
+        "flex";
+
 }
 
 
-// ==========================================
+
+// =====================================
 // MBYLL MODALIN
-// ==========================================
+// =====================================
 
 function closeProduct() {
 
     const modal =
         document.getElementById("modal");
 
+
     if (!modal) return;
 
-    modal.style.display = "none";
+
+    modal.style.display =
+        "none";
+
 }
 
 
-// ==========================================
-// KLIKO JASHTË MODALIT
-// ==========================================
 
-window.addEventListener("click", function(event) {
+// =====================================
+// KLIK JASHTË MODALIT
+// =====================================
 
-    const modal =
-        document.getElementById("modal");
+window.addEventListener(
+    "click",
+    function(event) {
 
-    if (
-        modal &&
-        event.target === modal
-    ) {
-        modal.style.display = "none";
+        const modal =
+            document.getElementById("modal");
+
+
+        if (
+            modal &&
+            event.target === modal
+        ) {
+
+            modal.style.display =
+                "none";
+
+        }
+
     }
+);
 
-});
 
 
-// ==========================================
-// KUR HAPET FAQJA
-// ==========================================
+// =====================================
+// SIGURIA PËR TEKSTIN
+// =====================================
+
+function escapeHtml(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+
+// =====================================
+// NIS FAQEN
+// =====================================
 
 document.addEventListener(
     "DOMContentLoaded",
     function() {
 
-        renderProducts();
+        loadProducts();
 
     }
 );
