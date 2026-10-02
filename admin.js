@@ -11,9 +11,202 @@ const supabaseClient =
     );
 
 
-// ===============================
-// SHTO PRODUKT
-// ===============================
+// =====================================
+// 🔐 ADMIN LOGIN
+// =====================================
+
+async function loginAdmin() {
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const errorBox =
+        document.getElementById("loginError");
+
+    if (!email || !password) {
+        if (errorBox) {
+            errorBox.textContent =
+                "Ju lutem plotësoni email dhe password.";
+            errorBox.style.display = "block";
+        }
+        return;
+    }
+
+    if (errorBox) {
+        errorBox.style.display = "none";
+    }
+
+    const {
+        data,
+        error
+    } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+    });
+
+    if (error) {
+        console.error(error);
+
+        if (errorBox) {
+            errorBox.textContent =
+                "Email ose password gabim!";
+            errorBox.style.display = "block";
+        }
+
+        return;
+    }
+
+    console.log("Admin u kyç:", data.user.email);
+
+    showAdminPanel();
+
+    await showProducts();
+}
+
+
+// =====================================
+// 🚪 LOGOUT
+// =====================================
+
+async function logoutAdmin() {
+
+    const {
+        error
+    } = await supabaseClient.auth.signOut();
+
+    if (error) {
+        console.error(error);
+        alert("Nuk u bë logout.");
+        return;
+    }
+
+    location.reload();
+}
+
+
+// =====================================
+// 🔎 KONTROLLO LOGIN-IN
+// =====================================
+
+async function checkAdminSession() {
+
+    const {
+        data
+    } = await supabaseClient.auth.getSession();
+
+    if (data.session) {
+
+        showAdminPanel();
+
+        await showProducts();
+
+    } else {
+
+        hideAdminPanel();
+
+    }
+}
+
+
+// =====================================
+// 👑 SHFAQ ADMIN PANEL
+// =====================================
+
+function showAdminPanel() {
+
+    const panel =
+        document.getElementById("adminPanel");
+
+    if (panel) {
+        panel.style.display = "block";
+    }
+
+    const loginButton =
+        document.getElementById("loginButton");
+
+    const loginEmail =
+        document.getElementById("loginEmail");
+
+    const loginPassword =
+        document.getElementById("loginPassword");
+
+    if (loginButton) {
+        loginButton.style.display = "none";
+    }
+
+    if (loginEmail) {
+        loginEmail.style.display = "none";
+    }
+
+    if (loginPassword) {
+        loginPassword.style.display = "none";
+    }
+
+    const loginError =
+        document.getElementById("loginError");
+
+    if (loginError) {
+        loginError.style.display = "none";
+    }
+
+    addLogoutButton();
+}
+
+
+// =====================================
+// 🔒 FSHEH ADMIN PANEL
+// =====================================
+
+function hideAdminPanel() {
+
+    const panel =
+        document.getElementById("adminPanel");
+
+    if (panel) {
+        panel.style.display = "none";
+    }
+}
+
+
+// =====================================
+// 🚪 SHTO BUTONIN LOGOUT
+// =====================================
+
+function addLogoutButton() {
+
+    if (document.getElementById("logoutButton")) {
+        return;
+    }
+
+    const panel =
+        document.getElementById("adminPanel");
+
+    if (!panel) return;
+
+    const button =
+        document.createElement("button");
+
+    button.id = "logoutButton";
+    button.type = "button";
+    button.textContent = "Dil nga Admin";
+    button.onclick = logoutAdmin;
+
+    button.style.cssText = `
+        padding: 12px 20px;
+        margin: 15px 0;
+        cursor: pointer;
+    `;
+
+    panel.prepend(button);
+}
+
+
+// =====================================
+// ➕ SHTO PRODUKT
+// =====================================
 
 async function addProduct() {
 
@@ -48,34 +241,42 @@ async function addProduct() {
     }
 
 
-    const file = imageInput.files[0];
+    const file =
+        imageInput.files[0];
 
-    const fileExtension =
+
+    const extension =
         file.name.split(".").pop();
+
 
     const fileName =
         Date.now() +
         "-" +
         Math.random().toString(36).substring(2) +
         "." +
-        fileExtension;
+        extension;
 
 
     try {
 
-        // ===============================
-        // 1. NGARKO FOTOGRAFINË
-        // ===============================
+        // =========================
+        // 🖼️ UPLOAD FOTO
+        // =========================
 
         const {
             error: uploadError
-        } = await supabaseClient
-            .storage
-            .from("product-images")
-            .upload(fileName, file);
+        } =
+            await supabaseClient
+                .storage
+                .from("product-images")
+                .upload(
+                    fileName,
+                    file
+                );
 
 
         if (uploadError) {
+
             console.error(uploadError);
 
             alert(
@@ -87,40 +288,42 @@ async function addProduct() {
         }
 
 
-        // ===============================
-        // 2. MERR URL E FOTOGRAFISË
-        // ===============================
+        // =========================
+        // 🔗 PUBLIC URL
+        // =========================
 
         const {
             data: imageData
-        } = supabaseClient
-            .storage
-            .from("product-images")
-            .getPublicUrl(fileName);
+        } =
+            supabaseClient
+                .storage
+                .from("product-images")
+                .getPublicUrl(fileName);
 
 
         const imageUrl =
             imageData.publicUrl;
 
 
-        // ===============================
-        // 3. RUAJ PRODUKTIN
-        // ===============================
+        // =========================
+        // 💾 RUAJ PRODUKTIN
+        // =========================
 
         const {
             error: databaseError
-        } = await supabaseClient
-            .from("products")
-            .insert([
-                {
-                    name: name,
-                    category: category,
-                    image: imageUrl,
-                    description: description,
-                    dimensions: dimensions,
-                    material: material
-                }
-            ]);
+        } =
+            await supabaseClient
+                .from("products")
+                .insert([
+                    {
+                        name: name,
+                        category: category,
+                        image: imageUrl,
+                        description: description,
+                        dimensions: dimensions,
+                        material: material
+                    }
+                ]);
 
 
         if (databaseError) {
@@ -136,18 +339,11 @@ async function addProduct() {
         }
 
 
-        // ===============================
-        // 4. PASTRO FORMULARIN
-        // ===============================
-
         clearForm();
 
         await showProducts();
 
-
-        alert(
-            "✅ Produkti u shtua me sukses!"
-        );
+        alert("✅ Produkti u shtua me sukses!");
 
     } catch (error) {
 
@@ -160,19 +356,16 @@ async function addProduct() {
 }
 
 
-
-// ===============================
-// SHFAQ PRODUKTET NË ADMIN
-// ===============================
+// =====================================
+// 📦 SHFAQ PRODUKTET
+// =====================================
 
 async function showProducts() {
 
     const container =
         document.getElementById("adminProducts");
 
-    if (!container) {
-        return;
-    }
+    if (!container) return;
 
 
     container.innerHTML =
@@ -182,12 +375,16 @@ async function showProducts() {
     const {
         data: products,
         error
-    } = await supabaseClient
-        .from("products")
-        .select("*")
-        .order("created_at", {
-            ascending: false
-        });
+    } =
+        await supabaseClient
+            .from("products")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
 
 
     if (error) {
@@ -224,17 +421,27 @@ async function showProducts() {
         const card =
             document.createElement("div");
 
-        card.className = "product";
+
+        card.className =
+            "product";
 
 
         card.innerHTML = `
 
             <div class="product-image">
 
-                <img
-                    src="${escapeHtml(product.image)}"
-                    alt="${escapeHtml(product.name)}"
-                >
+                ${
+                    product.image
+                    ?
+                    `
+                    <img
+                        src="${escapeHtml(product.image)}"
+                        alt="${escapeHtml(product.name)}"
+                    >
+                    `
+                    :
+                    `<span>FOTO</span>`
+                }
 
             </div>
 
@@ -283,10 +490,9 @@ async function showProducts() {
 }
 
 
-
-// ===============================
-// FSHI PRODUKT
-// ===============================
+// =====================================
+// 🗑️ FSHI PRODUKT
+// =====================================
 
 async function deleteProduct(id) {
 
@@ -303,10 +509,14 @@ async function deleteProduct(id) {
 
     const {
         error
-    } = await supabaseClient
-        .from("products")
-        .delete()
-        .eq("id", id);
+    } =
+        await supabaseClient
+            .from("products")
+            .delete()
+            .eq(
+                "id",
+                id
+            );
 
 
     if (error) {
@@ -324,14 +534,16 @@ async function deleteProduct(id) {
 
     await showProducts();
 
-    alert("Produkti u fshi me sukses!");
+
+    alert(
+        "✅ Produkti u fshi me sukses!"
+    );
 }
 
 
-
-// ===============================
-// PASTRO FORMULARIN
-// ===============================
+// =====================================
+// 🧹 PASTRO FORMULARIN
+// =====================================
 
 function clearForm() {
 
@@ -380,14 +592,13 @@ function clearForm() {
 }
 
 
-
-// ===============================
-// SIGURIA PËR HTML
-// ===============================
+// =====================================
+// 🛡️ SIGURIA HTML
+// =====================================
 
 function escapeHtml(value) {
 
-    return String(value)
+    return String(value || "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
@@ -396,14 +607,15 @@ function escapeHtml(value) {
 }
 
 
-
-// ===============================
-// NGARKO PRODUKTET
-// ===============================
+// =====================================
+// 🚀 START
+// =====================================
 
 document.addEventListener(
     "DOMContentLoaded",
     function() {
-        showProducts();
+
+        checkAdminSession();
+
     }
 );
