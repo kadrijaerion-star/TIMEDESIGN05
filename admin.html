@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>TimeDesign | Admin</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            Time<span>Design</span>
+        </div>
+
+        <nav>
+            <a href="index.html">Shfaq Showroom</a>
+        </nav>
+    </header>
+
+
+    <main style="padding-top: 120px; padding-bottom: 80px;">
+
+        <section class="section">
+
+            <div class="section-title">
+                <p>TIME DESIGN</p>
+                <h2>Admin Panel</h2>
+            </div>
+
+
+            <div class="contact-box">
+
+                <div>
+                    <h3>➕ Shto produkt</h3>
+
+                    <p>
+                        Krijo produkte të reja për showroom-in.
+                    </p>
+
+                    <br>
+
+                    <button onclick="openAddProduct()">
+                        Shto produkt
+                    </button>
+                </div>
+
+
+                <div>
+                    <h3>🛋️ Produktet</h3>
+
+                    <p>
+                        Shiko dhe menaxho produktet.
+                    </p>
+
+                    <br>
+
+                    <button onclick="showProducts()">
+                        Shiko produktet
+                    </button>
+                </div>
+
+
+                <div>
+                    <h3>🌐 Showroom</h3>
+
+                    <p>
+                        Hape faqen publike.
+                    </p>
+
+                    <br>
+
+                    <a href="index.html" class="hero-btn">
+                        Hap showroom
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section id="add-product" class="section" style="display:none;">
+
+            <div class="section-title">
+                <p>ADMIN</p>
+                <h2>Shto produkt</h2>
+            </div>
+
+
+            <div class="modal-content" style="margin:auto;">
+
+                <label>Emri i produktit</label>
+
+                <input
+                    type="text"
+                    id="productName"
+                    placeholder="p.sh. Sallon Milano"
+                >
+
+
+                <label>Kategoria</label>
+
+                <select id="productCategory">
+
+                    <option value="Dhoma dite">
+                        Dhoma dite
+                    </option>
+
+                    <option value="Dhoma gjumi">
+                        Dhoma gjumi
+                    </option>
+
+                    <option value="Kuzhina">
+                        Kuzhina
+                    </option>
+
+                    <option value="Gardëroba">
+                        Gardëroba
+                    </option>
+
+                </select>
+
+<label>Fotografia e produktit</label>
+
+<input
+    type="file"
+    id="productImage"
+    accept="image/*"
+>
+
+<div id="imagePreview" style="margin-top:15px;"></div>
+
+
+                <label>Përshkrimi</label>
+
+                <textarea
+                    id="productDescription"
+                    placeholder="Përshkrimi i produktit..."
+                ></textarea>
+
+
+                <label>Dimensionet</label>
+
+                <input
+                    type="text"
+                    id="productDimensions"
+                    placeholder="280 x 190 cm"
+                >
+
+
+                <label>Materiali</label>
+
+                <input
+                    type="text"
+                    id="productMaterial"
+                    placeholder="MDF"
+                >
+
+
+                <br><br>
+
+                <button onclick="addProduct()">
+                    Ruaj produktin
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section id="product-list" class="section">
+
+            <div class="section-title">
+                <p>MENAXHIMI</p>
+                <h2>Produktet</h2>
+            </div>
+
+            <div id="adminProducts" class="products"></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="admin.js"></script>
+
+</body>
+</html>
