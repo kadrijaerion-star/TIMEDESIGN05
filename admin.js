@@ -1,44 +1,21 @@
-let products =
-    JSON.parse(localStorage.getItem("timeDesignProducts")) || [];
+const SUPABASE_URL =
+    "https://gpwqcfjdwwwlwutcuizpx.supabase.co";
 
+const SUPABASE_KEY =
+    "sb_publishable_4V3NG02ni7eC6LduWqHjxA_-3s2DZgj";
 
-// ===============================
-// RUAJTJA E PRODUKTEVE
-// ===============================
-
-function saveProducts() {
-
-    localStorage.setItem(
-        "timeDesignProducts",
-        JSON.stringify(products)
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
     );
-
-}
-
-
-// ===============================
-// HAP FORMULARIN
-// ===============================
-
-function openAddProduct() {
-
-    const section =
-        document.getElementById("add-product");
-
-    section.style.display = "block";
-
-    section.scrollIntoView({
-        behavior: "smooth"
-    });
-
-}
 
 
 // ===============================
 // SHTO PRODUKT
 // ===============================
 
-function addProduct() {
+async function addProduct() {
 
     const name =
         document.getElementById("productName").value.trim();
@@ -59,103 +36,172 @@ function addProduct() {
         document.getElementById("productMaterial").value.trim();
 
 
-    // Kontrollo të dhënat
-
     if (!name) {
-
         alert("Ju lutem vendosni emrin e produktit.");
-
         return;
     }
 
 
-    if (imageInput.files.length === 0) {
-
+    if (!imageInput.files.length) {
         alert("Ju lutem zgjidhni një fotografi.");
-
         return;
     }
 
 
-    // Merr fotografinë
+    const file = imageInput.files[0];
 
-    const file =
-        imageInput.files[0];
+    const fileExtension =
+        file.name.split(".").pop();
 
-    const reader =
-        new FileReader();
-
-
-    reader.onload = function(event) {
-
-        const product = {
-
-            id: Date.now(),
-
-            name: name,
-
-            category: category,
-
-            image: event.target.result,
-
-            description: description,
-
-            dimensions: dimensions,
-
-            material: material
-
-        };
+    const fileName =
+        Date.now() +
+        "-" +
+        Math.random().toString(36).substring(2) +
+        "." +
+        fileExtension;
 
 
-        // Shto produktin
+    try {
 
-        products.push(product);
+        // ===============================
+        // 1. NGARKO FOTOGRAFINË
+        // ===============================
+
+        const {
+            error: uploadError
+        } = await supabaseClient
+            .storage
+            .from("product-images")
+            .upload(fileName, file);
 
 
-        // Ruaje
+        if (uploadError) {
+            console.error(uploadError);
 
-        saveProducts();
+            alert(
+                "Gabim gjatë ngarkimit të fotografisë:\n" +
+                uploadError.message
+            );
+
+            return;
+        }
 
 
-        // Pastro formularin
+        // ===============================
+        // 2. MERR URL E FOTOGRAFISË
+        // ===============================
+
+        const {
+            data: imageData
+        } = supabaseClient
+            .storage
+            .from("product-images")
+            .getPublicUrl(fileName);
+
+
+        const imageUrl =
+            imageData.publicUrl;
+
+
+        // ===============================
+        // 3. RUAJ PRODUKTIN
+        // ===============================
+
+        const {
+            error: databaseError
+        } = await supabaseClient
+            .from("products")
+            .insert([
+                {
+                    name: name,
+                    category: category,
+                    image: imageUrl,
+                    description: description,
+                    dimensions: dimensions,
+                    material: material
+                }
+            ]);
+
+
+        if (databaseError) {
+
+            console.error(databaseError);
+
+            alert(
+                "Produkti nuk u ruajt:\n" +
+                databaseError.message
+            );
+
+            return;
+        }
+
+
+        // ===============================
+        // 4. PASTRO FORMULARIN
+        // ===============================
 
         clearForm();
 
-
-        // Rifresko listën
-
-        showProducts();
+        await showProducts();
 
 
-        alert("Produkti u shtua me sukses!");
+        alert(
+            "✅ Produkti u shtua me sukses!"
+        );
 
-    };
+    } catch (error) {
 
+        console.error(error);
 
-    reader.readAsDataURL(file);
-
+        alert(
+            "Ndodhi një gabim. Shiko Console për detaje."
+        );
+    }
 }
+
 
 
 // ===============================
 // SHFAQ PRODUKTET NË ADMIN
 // ===============================
 
-function showProducts() {
+async function showProducts() {
 
     const container =
         document.getElementById("adminProducts");
-
 
     if (!container) {
         return;
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "<p>Duke ngarkuar produktet...</p>";
 
 
-    if (products.length === 0) {
+    const {
+        data: products,
+        error
+    } = await supabaseClient
+        .from("products")
+        .select("*")
+        .order("created_at", {
+            ascending: false
+        });
+
+
+    if (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+            "<p>Nuk u mundën të ngarkohen produktet.</p>";
+
+        return;
+    }
+
+
+    if (!products || products.length === 0) {
 
         container.innerHTML = `
             <p style="
@@ -170,70 +216,79 @@ function showProducts() {
     }
 
 
+    container.innerHTML = "";
+
+
     products.forEach(product => {
 
-        container.innerHTML += `
+        const card =
+            document.createElement("div");
 
-            <div class="product">
-
-                <div class="product-image">
-
-                    <img
-                        src="${product.image}"
-                        alt="${product.name}"
-                    >
-
-                </div>
+        card.className = "product";
 
 
-                <div class="product-info">
+        card.innerHTML = `
 
-                    <h3>
-                        ${product.name}
-                    </h3>
+            <div class="product-image">
 
-                    <p>
-                        ${product.category}
-                    </p>
+                <img
+                    src="${escapeHtml(product.image)}"
+                    alt="${escapeHtml(product.name)}"
+                >
 
-                    <p>
-                        ${product.description}
-                    </p>
+            </div>
 
-                    <p>
-                        <strong>Dimensionet:</strong>
-                        ${product.dimensions}
-                    </p>
 
-                    <p>
-                        <strong>Materiali:</strong>
-                        ${product.material}
-                    </p>
+            <div class="product-info">
 
-                    <br>
+                <h3>
+                    ${escapeHtml(product.name)}
+                </h3>
 
-                    <button
-                        onclick="deleteProduct(${product.id})"
-                    >
-                        🗑️ Fshi
-                    </button>
+                <p>
+                    ${escapeHtml(product.category || "")}
+                </p>
 
-                </div>
+                <p>
+                    ${escapeHtml(product.description || "")}
+                </p>
+
+                <p>
+                    <strong>Dimensionet:</strong>
+                    ${escapeHtml(product.dimensions || "")}
+                </p>
+
+                <p>
+                    <strong>Materiali:</strong>
+                    ${escapeHtml(product.material || "")}
+                </p>
+
+                <br>
+
+                <button
+                    type="button"
+                    onclick="deleteProduct(${product.id})"
+                >
+                    🗑️ Fshi
+                </button>
 
             </div>
 
         `;
 
-    });
 
+        container.appendChild(card);
+
+    });
 }
+
 
 
 // ===============================
 // FSHI PRODUKT
 // ===============================
 
-function deleteProduct(id) {
+async function deleteProduct(id) {
 
     const confirmation =
         confirm(
@@ -246,17 +301,32 @@ function deleteProduct(id) {
     }
 
 
-    products =
-        products.filter(
-            product => product.id !== id
+    const {
+        error
+    } = await supabaseClient
+        .from("products")
+        .delete()
+        .eq("id", id);
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Produkti nuk u fshi:\n" +
+            error.message
         );
 
+        return;
+    }
 
-    saveProducts();
 
-    showProducts();
+    await showProducts();
 
+    alert("Produkti u fshi me sukses!");
 }
+
 
 
 // ===============================
@@ -265,31 +335,75 @@ function deleteProduct(id) {
 
 function clearForm() {
 
-    document.getElementById("productName").value = "";
+    const name =
+        document.getElementById("productName");
 
-    document.getElementById("productImage").value = "";
+    const image =
+        document.getElementById("productImage");
 
-    document.getElementById("productDescription").value = "";
+    const description =
+        document.getElementById("productDescription");
 
-    document.getElementById("productDimensions").value = "";
+    const dimensions =
+        document.getElementById("productDimensions");
 
-    document.getElementById("productMaterial").value = "";
+    const material =
+        document.getElementById("productMaterial");
 
     const preview =
         document.getElementById("imagePreview");
 
 
-    if (preview) {
-
-        preview.innerHTML = "";
-
+    if (name) {
+        name.value = "";
     }
 
+    if (image) {
+        image.value = "";
+    }
+
+    if (description) {
+        description.value = "";
+    }
+
+    if (dimensions) {
+        dimensions.value = "";
+    }
+
+    if (material) {
+        material.value = "";
+    }
+
+    if (preview) {
+        preview.innerHTML = "";
+    }
 }
 
 
+
 // ===============================
-// SHFAQ PRODUKTET KUR HAPET ADMIN
+// SIGURIA PËR HTML
 // ===============================
 
-showProducts();
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+
+// ===============================
+// NGARKO PRODUKTET
+// ===============================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+        showProducts();
+    }
+);
