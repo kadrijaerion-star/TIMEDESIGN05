@@ -2,68 +2,46 @@
 <html lang="sq">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>TimeDesign | Admin</title>
 
-    <link
-        rel="stylesheet"
-        href="style.css">
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
+    <!-- LOGIN -->
 
-    <!-- ================================= -->
-    <!-- ADMIN LOGIN -->
-    <!-- ================================= -->
+    <div id="loginPage" style="
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:#f5f5f5;
+        padding:20px;
+    ">
 
-    <div
-        id="loginPage"
-        style="
-            min-height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            background:#f5f5f5;
-            padding:20px;
+        <div style="
+            width:100%;
+            max-width:400px;
+            background:white;
+            padding:40px;
+            border-radius:15px;
+            box-shadow:0 10px 40px rgba(0,0,0,0.12);
         ">
 
-        <div
-            style="
-                width:100%;
-                max-width:400px;
-                background:white;
-                padding:40px;
-                border-radius:15px;
-                box-shadow:0 10px 40px rgba(0,0,0,0.12);
+            <div style="
+                text-align:center;
+                margin-bottom:30px;
             ">
 
-            <div
-                style="
-                    text-align:center;
-                    margin-bottom:30px;
-                ">
-
-                <div
-                    class="logo"
-                    style="
-                        font-size:30px;
-                        margin-bottom:10px;
-                    ">
+                <div class="logo" style="font-size:30px;">
                     Time<span>Design</span>
                 </div>
 
-                <h2>
-                    Admin Panel
-                </h2>
+                <h2>Admin Panel</h2>
 
                 <p>
                     Hyni për të menaxhuar produktet
@@ -72,91 +50,65 @@
             </div>
 
 
-            <!-- USERNAME -->
-
-            <label>
-                Username
-            </label>
+            <label>Username</label>
 
             <input
                 type="text"
                 id="loginUsername"
                 placeholder="Username"
-                autocomplete="username"
                 style="
                     width:100%;
                     padding:14px;
                     margin:8px 0 18px;
-                    border:1px solid #ddd;
-                    border-radius:8px;
                     box-sizing:border-box;
                 ">
 
 
-            <!-- PASSWORD -->
-
-            <label>
-                Password
-            </label>
+            <label>Password</label>
 
             <input
                 type="password"
                 id="loginPassword"
                 placeholder="Password"
-                autocomplete="current-password"
                 style="
                     width:100%;
                     padding:14px;
-                    margin:8px 0 10px;
-                    border:1px solid #ddd;
-                    border-radius:8px;
+                    margin:8px 0;
                     box-sizing:border-box;
                 ">
 
-
-            <!-- ERROR -->
 
             <p
                 id="loginError"
                 style="
                     display:none;
-                    color:#d00;
+                    color:red;
                     text-align:center;
-                    margin:10px 0;
                 ">
                 Username ose password gabim!
             </p>
 
 
-            <!-- LOGIN BUTTON -->
-
             <button
-                onclick="loginAdmin()"
+                id="loginButton"
+                type="button"
                 style="
                     width:100%;
                     padding:14px;
-                    border:none;
-                    border-radius:8px;
-                    cursor:pointer;
-                    font-size:16px;
                     margin-top:10px;
+                    cursor:pointer;
                 ">
-
                 Hyr në Admin
-
             </button>
 
 
-            <div
-                style="
-                    text-align:center;
-                    margin-top:20px;
-                ">
-
+            <div style="
+                text-align:center;
+                margin-top:20px;
+            ">
                 <a href="index.html">
                     ← Kthehu në faqe
                 </a>
-
             </div>
 
         </div>
@@ -164,17 +116,9 @@
     </div>
 
 
-
-    <!-- ================================= -->
     <!-- ADMIN PANEL -->
-    <!-- ================================= -->
 
-    <div
-        id="adminPanel"
-        style="display:none;">
-
-
-        <!-- HEADER -->
+    <div id="adminPanel" style="display:none;">
 
         <header>
 
@@ -188,9 +132,7 @@
                     Shiko faqen
                 </a>
 
-                <a
-                    href="#"
-                    onclick="logoutAdmin(); return false;">
+                <a href="#" id="logoutButton">
                     Dil
                 </a>
 
@@ -199,20 +141,13 @@
         </header>
 
 
-
-        <!-- ================================= -->
         <!-- SHTO PRODUKT -->
-        <!-- ================================= -->
 
-        <section
-            id="add-product"
-            class="section">
+        <section id="add-product" class="section">
 
             <div class="section-title">
 
-                <p>
-                    ADMIN
-                </p>
+                <p>ADMIN</p>
 
                 <h2>
                     Shto produkt
@@ -220,8 +155,6 @@
 
             </div>
 
-
-            <!-- EMRI -->
 
             <label>
                 Emri i produktit
@@ -232,8 +165,6 @@
                 id="productName"
                 placeholder="P.sh. Sallon Modern">
 
-
-            <!-- KATEGORIA -->
 
             <label>
                 Kategoria
@@ -260,8 +191,6 @@
             </select>
 
 
-            <!-- FOTO -->
-
             <label>
                 Fotografia
             </label>
@@ -272,14 +201,8 @@
                 accept="image/*">
 
 
-            <!-- PREVIEW -->
+            <div id="imagePreview"></div>
 
-            <div
-                id="imagePreview">
-            </div>
-
-
-            <!-- PËRSHKRIMI -->
 
             <label>
                 Përshkrimi
@@ -291,8 +214,6 @@
             </textarea>
 
 
-            <!-- DIMENSIONET -->
-
             <label>
                 Dimensionet
             </label>
@@ -302,8 +223,6 @@
                 id="productDimensions"
                 placeholder="P.sh. 250 x 180 cm">
 
-
-            <!-- MATERIALI -->
 
             <label>
                 Materiali
@@ -315,10 +234,9 @@
                 placeholder="P.sh. MDF, dru...">
 
 
-            <!-- BUTONI -->
-
             <button
-                onclick="addProduct()">
+                id="addProductButton"
+                type="button">
 
                 Shto produkt
 
@@ -327,10 +245,7 @@
         </section>
 
 
-
-        <!-- ================================= -->
         <!-- PRODUKTET -->
-        <!-- ================================= -->
 
         <section class="section">
 
@@ -346,7 +261,6 @@
 
             </div>
 
-
             <div
                 id="adminProducts"
                 class="products">
@@ -354,19 +268,39 @@
 
         </section>
 
-
     </div>
 
 
-
     <!-- ================================= -->
-    <!-- LOGIN JAVASCRIPT -->
+    <!-- LOGIN + ADMIN SYSTEM -->
     <!-- ================================= -->
 
     <script>
 
         const ADMIN_USERNAME = "timedesign";
         const ADMIN_PASSWORD = "1234567890";
+
+
+        const loginPage =
+            document.getElementById("loginPage");
+
+        const adminPanel =
+            document.getElementById("adminPanel");
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+        const logoutButton =
+            document.getElementById("logoutButton");
+
+
+        function showAdminPanel() {
+
+            loginPage.style.display = "none";
+
+            adminPanel.style.display = "block";
+
+        }
 
 
         function loginAdmin() {
@@ -392,6 +326,10 @@
                     "true"
                 );
 
+                document.getElementById(
+                    "loginError"
+                ).style.display = "none";
+
                 showAdminPanel();
 
             } else {
@@ -401,19 +339,6 @@
                 ).style.display = "block";
 
             }
-
-        }
-
-
-        function showAdminPanel() {
-
-            document.getElementById(
-                "loginPage"
-            ).style.display = "none";
-
-            document.getElementById(
-                "adminPanel"
-            ).style.display = "block";
 
         }
 
@@ -429,41 +354,47 @@
         }
 
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            function() {
-
-                if (
-                    sessionStorage.getItem(
-                        "timeDesignAdmin"
-                    ) === "true"
-                ) {
-
-                    showAdminPanel();
-
-                }
-
-            }
+        loginButton.addEventListener(
+            "click",
+            loginAdmin
         );
 
 
-        document.addEventListener(
-            "keydown",
+        logoutButton.addEventListener(
+            "click",
             function(event) {
 
-                if (
-                    event.key === "Enter" &&
-                    document.getElementById(
-                        "loginPage"
-                    ).style.display !== "none"
-                ) {
+                event.preventDefault();
 
-                    loginAdmin();
-
-                }
+                logoutAdmin();
 
             }
         );
+
+
+        document
+            .getElementById("loginPassword")
+            .addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (event.key === "Enter") {
+                        loginAdmin();
+                    }
+
+                }
+            );
+
+
+        if (
+            sessionStorage.getItem(
+                "timeDesignAdmin"
+            ) === "true"
+        ) {
+
+            showAdminPanel();
+
+        }
 
     </script>
 
