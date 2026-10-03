@@ -11,6 +11,7 @@ const supabaseClient =
     );
 
 
+
 // =====================================
 // 🔐 ADMIN LOGIN
 // =====================================
@@ -27,16 +28,22 @@ async function loginAdmin() {
         document.getElementById("loginError");
 
     if (!email || !password) {
+
         if (errorBox) {
+
             errorBox.textContent =
                 "Ju lutem plotësoni email dhe password.";
-            errorBox.style.display = "block";
+
+            errorBox.style.display =
+                "block";
         }
+
         return;
     }
 
     if (errorBox) {
-        errorBox.style.display = "none";
+        errorBox.style.display =
+            "none";
     }
 
     const {
@@ -48,23 +55,87 @@ async function loginAdmin() {
     });
 
     if (error) {
+
         console.error(error);
 
         if (errorBox) {
+
             errorBox.textContent =
                 "Email ose password gabim!";
-            errorBox.style.display = "block";
+
+            errorBox.style.display =
+                "block";
         }
 
         return;
     }
 
-    console.log("Admin u kyç:", data.user.email);
+    console.log(
+        "Admin u kyç:",
+        data.user.email
+    );
 
     showAdminPanel();
 
     await showProducts();
 }
+
+
+
+// =====================================
+// 🔑 RESET PASSWORD
+// =====================================
+
+async function forgotPassword() {
+
+    const emailInput =
+        document.getElementById("loginEmail");
+
+    const email =
+        emailInput
+            ? emailInput.value.trim()
+            : "";
+
+    if (!email) {
+
+        alert(
+            "Shkruaje email-in e Admin-it së pari."
+        );
+
+        return;
+    }
+
+
+    const {
+        error
+    } =
+        await supabaseClient.auth.resetPasswordForEmail(
+            email,
+            {
+                redirectTo:
+                    "https://kadrijaerion-star.github.io/TIMEDESIGN05/reset-password.html"
+            }
+        );
+
+
+    if (error) {
+
+        console.error(error);
+
+        alert(
+            "Nuk u dërgua email-i për reset:\n" +
+            error.message
+        );
+
+        return;
+    }
+
+
+    alert(
+        "✅ Linku për ndryshimin e password-it u dërgua në Gmail."
+    );
+}
+
 
 
 // =====================================
@@ -75,16 +146,23 @@ async function logoutAdmin() {
 
     const {
         error
-    } = await supabaseClient.auth.signOut();
+    } =
+        await supabaseClient.auth.signOut();
 
     if (error) {
+
         console.error(error);
-        alert("Nuk u bë logout.");
+
+        alert(
+            "Nuk u bë logout."
+        );
+
         return;
     }
 
     location.reload();
 }
+
 
 
 // =====================================
@@ -95,7 +173,9 @@ async function checkAdminSession() {
 
     const {
         data
-    } = await supabaseClient.auth.getSession();
+    } =
+        await supabaseClient.auth.getSession();
+
 
     if (data.session) {
 
@@ -111,6 +191,7 @@ async function checkAdminSession() {
 }
 
 
+
 // =====================================
 // 👑 SHFAQ ADMIN PANEL
 // =====================================
@@ -120,9 +201,13 @@ function showAdminPanel() {
     const panel =
         document.getElementById("adminPanel");
 
+
     if (panel) {
-        panel.style.display = "block";
+
+        panel.style.display =
+            "block";
     }
+
 
     const loginButton =
         document.getElementById("loginButton");
@@ -133,27 +218,42 @@ function showAdminPanel() {
     const loginPassword =
         document.getElementById("loginPassword");
 
+
     if (loginButton) {
-        loginButton.style.display = "none";
+
+        loginButton.style.display =
+            "none";
     }
+
 
     if (loginEmail) {
-        loginEmail.style.display = "none";
+
+        loginEmail.style.display =
+            "none";
     }
 
+
     if (loginPassword) {
-        loginPassword.style.display = "none";
+
+        loginPassword.style.display =
+            "none";
     }
+
 
     const loginError =
         document.getElementById("loginError");
 
+
     if (loginError) {
-        loginError.style.display = "none";
+
+        loginError.style.display =
+            "none";
     }
+
 
     addLogoutButton();
 }
+
 
 
 // =====================================
@@ -165,10 +265,14 @@ function hideAdminPanel() {
     const panel =
         document.getElementById("adminPanel");
 
+
     if (panel) {
-        panel.style.display = "none";
+
+        panel.style.display =
+            "none";
     }
 }
+
 
 
 // =====================================
@@ -177,22 +281,46 @@ function hideAdminPanel() {
 
 function addLogoutButton() {
 
-    if (document.getElementById("logoutButton")) {
+    if (
+        document.getElementById(
+            "logoutButton"
+        )
+    ) {
+
         return;
     }
 
+
     const panel =
-        document.getElementById("adminPanel");
+        document.getElementById(
+            "adminPanel"
+        );
+
 
     if (!panel) return;
 
-    const button =
-        document.createElement("button");
 
-    button.id = "logoutButton";
-    button.type = "button";
-    button.textContent = "Dil nga Admin";
-    button.onclick = logoutAdmin;
+    const button =
+        document.createElement(
+            "button"
+        );
+
+
+    button.id =
+        "logoutButton";
+
+
+    button.type =
+        "button";
+
+
+    button.textContent =
+        "Dil nga Admin";
+
+
+    button.onclick =
+        logoutAdmin;
+
 
     button.style.cssText = `
         padding: 12px 20px;
@@ -200,8 +328,10 @@ function addLogoutButton() {
         cursor: pointer;
     `;
 
+
     panel.prepend(button);
 }
+
 
 
 // =====================================
@@ -211,50 +341,85 @@ function addLogoutButton() {
 async function addProduct() {
 
     const name =
-        document.getElementById("productName").value.trim();
+        document.getElementById(
+            "productName"
+        ).value.trim();
+
 
     const category =
-        document.getElementById("productCategory").value;
+        document.getElementById(
+            "productCategory"
+        ).value;
+
 
     const imageInput =
-        document.getElementById("productImage");
+        document.getElementById(
+            "productImage"
+        );
+
 
     const description =
-        document.getElementById("productDescription").value.trim();
+        document.getElementById(
+            "productDescription"
+        ).value.trim();
+
 
     const dimensions =
-        document.getElementById("productDimensions").value.trim();
+        document.getElementById(
+            "productDimensions"
+        ).value.trim();
+
 
     const material =
-        document.getElementById("productMaterial").value.trim();
+        document.getElementById(
+            "productMaterial"
+        ).value.trim();
+
 
 
     if (!name) {
-        alert("Ju lutem vendosni emrin e produktit.");
+
+        alert(
+            "Ju lutem vendosni emrin e produktit."
+        );
+
         return;
     }
+
 
 
     if (!imageInput.files.length) {
-        alert("Ju lutem zgjidhni një fotografi.");
+
+        alert(
+            "Ju lutem zgjidhni një fotografi."
+        );
+
         return;
     }
+
 
 
     const file =
         imageInput.files[0];
 
 
+
     const extension =
-        file.name.split(".").pop();
+        file.name
+            .split(".")
+            .pop();
+
 
 
     const fileName =
         Date.now() +
         "-" +
-        Math.random().toString(36).substring(2) +
+        Math.random()
+            .toString(36)
+            .substring(2) +
         "." +
         extension;
+
 
 
     try {
@@ -275,9 +440,12 @@ async function addProduct() {
                 );
 
 
+
         if (uploadError) {
 
-            console.error(uploadError);
+            console.error(
+                uploadError
+            );
 
             alert(
                 "Gabim gjatë ngarkimit të fotografisë:\n" +
@@ -286,6 +454,7 @@ async function addProduct() {
 
             return;
         }
+
 
 
         // =========================
@@ -298,11 +467,15 @@ async function addProduct() {
             supabaseClient
                 .storage
                 .from("product-images")
-                .getPublicUrl(fileName);
+                .getPublicUrl(
+                    fileName
+                );
+
 
 
         const imageUrl =
             imageData.publicUrl;
+
 
 
         // =========================
@@ -326,9 +499,12 @@ async function addProduct() {
                 ]);
 
 
+
         if (databaseError) {
 
-            console.error(databaseError);
+            console.error(
+                databaseError
+            );
 
             alert(
                 "Produkti nuk u ruajt:\n" +
@@ -339,11 +515,16 @@ async function addProduct() {
         }
 
 
+
         clearForm();
 
         await showProducts();
 
-        alert("✅ Produkti u shtua me sukses!");
+
+        alert(
+            "✅ Produkti u shtua me sukses!"
+        );
+
 
     } catch (error) {
 
@@ -356,6 +537,7 @@ async function addProduct() {
 }
 
 
+
 // =====================================
 // 📦 SHFAQ PRODUKTET
 // =====================================
@@ -363,13 +545,18 @@ async function addProduct() {
 async function showProducts() {
 
     const container =
-        document.getElementById("adminProducts");
+        document.getElementById(
+            "adminProducts"
+        );
+
 
     if (!container) return;
 
 
+
     container.innerHTML =
         "<p>Duke ngarkuar produktet...</p>";
+
 
 
     const {
@@ -387,6 +574,7 @@ async function showProducts() {
             );
 
 
+
     if (error) {
 
         console.error(error);
@@ -398,7 +586,11 @@ async function showProducts() {
     }
 
 
-    if (!products || products.length === 0) {
+
+    if (
+        !products ||
+        products.length === 0
+    ) {
 
         container.innerHTML = `
             <p style="
@@ -413,81 +605,111 @@ async function showProducts() {
     }
 
 
-    container.innerHTML = "";
+
+    container.innerHTML =
+        "";
 
 
-    products.forEach(product => {
 
-        const card =
-            document.createElement("div");
+    products.forEach(
+        product => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
 
 
-        card.className =
-            "product";
+            card.className =
+                "product";
 
 
-        card.innerHTML = `
+            card.innerHTML = `
 
-            <div class="product-image">
+                <div class="product-image">
 
-                ${
-                    product.image
-                    ?
-                    `
-                    <img
-                        src="${escapeHtml(product.image)}"
-                        alt="${escapeHtml(product.name)}"
+                    ${
+                        product.image
+                        ?
+                        `
+                        <img
+                            src="${escapeHtml(product.image)}"
+                            alt="${escapeHtml(product.name)}"
+                        >
+                        `
+                        :
+                        `<span>FOTO</span>`
+                    }
+
+                </div>
+
+
+                <div class="product-info">
+
+                    <h3>
+                        ${escapeHtml(product.name)}
+                    </h3>
+
+
+                    <p>
+                        ${escapeHtml(
+                            product.category || ""
+                        )}
+                    </p>
+
+
+                    <p>
+                        ${escapeHtml(
+                            product.description || ""
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Dimensionet:
+                        </strong>
+
+                        ${escapeHtml(
+                            product.dimensions || ""
+                        )}
+                    </p>
+
+
+                    <p>
+                        <strong>
+                            Materiali:
+                        </strong>
+
+                        ${escapeHtml(
+                            product.material || ""
+                        )}
+                    </p>
+
+
+                    <br>
+
+
+                    <button
+                        type="button"
+                        onclick="deleteProduct(${product.id})"
                     >
-                    `
-                    :
-                    `<span>FOTO</span>`
-                }
+                        🗑️ Fshi
+                    </button>
 
-            </div>
+                </div>
 
-
-            <div class="product-info">
-
-                <h3>
-                    ${escapeHtml(product.name)}
-                </h3>
-
-                <p>
-                    ${escapeHtml(product.category || "")}
-                </p>
-
-                <p>
-                    ${escapeHtml(product.description || "")}
-                </p>
-
-                <p>
-                    <strong>Dimensionet:</strong>
-                    ${escapeHtml(product.dimensions || "")}
-                </p>
-
-                <p>
-                    <strong>Materiali:</strong>
-                    ${escapeHtml(product.material || "")}
-                </p>
-
-                <br>
-
-                <button
-                    type="button"
-                    onclick="deleteProduct(${product.id})"
-                >
-                    🗑️ Fshi
-                </button>
-
-            </div>
-
-        `;
+            `;
 
 
-        container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
-    });
+        }
+    );
 }
+
 
 
 // =====================================
@@ -503,6 +725,7 @@ async function deleteProduct(id) {
 
 
     if (!confirmation) {
+
         return;
     }
 
@@ -541,6 +764,7 @@ async function deleteProduct(id) {
 }
 
 
+
 // =====================================
 // 🧹 PASTRO FORMULARIN
 // =====================================
@@ -548,48 +772,84 @@ async function deleteProduct(id) {
 function clearForm() {
 
     const name =
-        document.getElementById("productName");
+        document.getElementById(
+            "productName"
+        );
+
 
     const image =
-        document.getElementById("productImage");
+        document.getElementById(
+            "productImage"
+        );
+
 
     const description =
-        document.getElementById("productDescription");
+        document.getElementById(
+            "productDescription"
+        );
+
 
     const dimensions =
-        document.getElementById("productDimensions");
+        document.getElementById(
+            "productDimensions"
+        );
+
 
     const material =
-        document.getElementById("productMaterial");
+        document.getElementById(
+            "productMaterial"
+        );
+
 
     const preview =
-        document.getElementById("imagePreview");
+        document.getElementById(
+            "imagePreview"
+        );
+
 
 
     if (name) {
-        name.value = "";
+
+        name.value =
+            "";
     }
+
 
     if (image) {
-        image.value = "";
+
+        image.value =
+            "";
     }
+
 
     if (description) {
-        description.value = "";
+
+        description.value =
+            "";
     }
+
 
     if (dimensions) {
-        dimensions.value = "";
+
+        dimensions.value =
+            "";
     }
+
 
     if (material) {
-        material.value = "";
+
+        material.value =
+            "";
     }
 
+
     if (preview) {
-        preview.innerHTML = "";
+
+        preview.innerHTML =
+            "";
     }
 }
+
 
 
 // =====================================
@@ -598,13 +858,32 @@ function clearForm() {
 
 function escapeHtml(value) {
 
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    return String(
+        value || ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
 }
+
 
 
 // =====================================
