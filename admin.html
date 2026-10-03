@@ -12,400 +12,331 @@
 
 <body>
 
-    <!-- LOGIN -->
 
-    <div id="loginPage" style="
-        min-height:100vh;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        background:#f5f5f5;
-        padding:20px;
+<!-- ================================= -->
+<!-- LOGIN -->
+<!-- ================================= -->
+
+<div id="loginPage" style="
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f5f5f5;
+    padding:20px;
+">
+
+    <div style="
+        width:100%;
+        max-width:400px;
+        background:white;
+        padding:40px;
+        border-radius:15px;
+        box-shadow:0 10px 40px rgba(0,0,0,0.12);
     ">
 
         <div style="
-            width:100%;
-            max-width:400px;
-            background:white;
-            padding:40px;
-            border-radius:15px;
-            box-shadow:0 10px 40px rgba(0,0,0,0.12);
+            text-align:center;
+            margin-bottom:30px;
         ">
 
-            <div style="
-                text-align:center;
-                margin-bottom:30px;
-            ">
-
-                <div class="logo" style="font-size:30px;">
-                    Time<span>Design</span>
-                </div>
-
-                <h2>Admin Panel</h2>
-
-                <p>
-                    Hyni për të menaxhuar produktet
-                </p>
-
+            <div class="logo" style="font-size:30px;">
+                Time<span>Design</span>
             </div>
 
+            <h2>Admin Panel</h2>
 
-            <label>Email</label>
-
-<input
-    type="email"
-    id="loginEmail"
-    placeholder="Email"
-    style="
-        width:100%;
-        padding:14px;
-        margin:8px 0;
-        box-sizing:border-box;
-    "
->
-                style="
-                    width:100%;
-                    padding:14px;
-                    margin:8px 0 18px;
-                    box-sizing:border-box;
-                ">
-
-
-            <label>Password</label>
-
-            <input
-                type="password"
-                id="loginPassword"
-                placeholder="Password"
-                style="
-                    width:100%;
-                    padding:14px;
-                    margin:8px 0;
-                    box-sizing:border-box;
-                ">
-
-
-            <p
-                id="loginError"
-                style="
-                    display:none;
-                    color:red;
-                    text-align:center;
-                ">
-                email ose password gabim!
+            <p>
+                Hyni për të menaxhuar produktet
             </p>
 
-
-           <button
-    id="loginButton"
-    type="button"
-    onclick="loginAdmin()">
-    Hyr
-</button>
+        </div>
 
 
-            <div style="
+        <!-- EMAIL -->
+
+        <label>Email</label>
+
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="Email"
+            style="
+                width:100%;
+                padding:14px;
+                margin:8px 0 18px;
+                box-sizing:border-box;
+            "
+        >
+
+
+        <!-- PASSWORD -->
+
+        <label>Password</label>
+
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Password"
+            style="
+                width:100%;
+                padding:14px;
+                margin:8px 0;
+                box-sizing:border-box;
+            "
+        >
+
+
+        <!-- ERROR -->
+
+        <p
+            id="loginError"
+            style="
+                display:none;
+                color:red;
                 text-align:center;
-                margin-top:20px;
-            ">
-                <a href="index.html">
-                    ← Kthehu në faqe
-                </a>
-            </div>
+            "
+        >
+            Email ose password gabim!
+        </p>
+
+
+        <!-- LOGIN -->
+
+        <button
+            id="loginButton"
+            type="button"
+            onclick="loginAdmin()"
+            style="
+                width:100%;
+                padding:14px;
+                margin-top:10px;
+                cursor:pointer;
+            "
+        >
+            Hyr
+        </button>
+
+
+        <!-- FORGOT PASSWORD -->
+
+        <button
+            type="button"
+            onclick="forgotPassword()"
+            style="
+                width:100%;
+                padding:12px;
+                margin-top:12px;
+                background:none;
+                border:none;
+                color:#555;
+                cursor:pointer;
+                text-decoration:underline;
+            "
+        >
+            Harruat password-in?
+        </button>
+
+
+        <!-- BACK -->
+
+        <div style="
+            text-align:center;
+            margin-top:20px;
+        ">
+
+            <a href="index.html">
+                ← Kthehu në faqe
+            </a>
 
         </div>
 
     </div>
 
-
-    <!-- ADMIN PANEL -->
-
-    <div id="adminPanel" style="display:none;">
-
-        <header>
-
-            <div class="logo">
-                Time<span>Design</span>
-            </div>
-
-            <nav>
-
-                <a href="index.html">
-                    Shiko faqen
-                </a>
-
-                <a href="#" id="logoutButton">
-                    Dil
-                </a>
-
-            </nav>
-
-        </header>
+</div>
 
 
-        <!-- SHTO PRODUKT -->
 
-        <section id="add-product" class="section">
+<!-- ================================= -->
+<!-- ADMIN PANEL -->
+<!-- ================================= -->
 
-            <div class="section-title">
-
-                <p>ADMIN</p>
-
-                <h2>
-                    Shto produkt
-                </h2>
-
-            </div>
+<div id="adminPanel" style="display:none;">
 
 
-            <label>
-                Emri i produktit
-            </label>
+    <!-- HEADER -->
 
-            <input
-                type="text"
-                id="productName"
-                placeholder="P.sh. Sallon Modern">
+    <header>
 
+        <div class="logo">
+            Time<span>Design</span>
+        </div>
 
-            <label>
-                Kategoria
-            </label>
+        <nav>
 
-            <select id="productCategory">
+            <a href="index.html">
+                Shiko faqen
+            </a>
 
-                <option value="Dhoma dite">
-                    Dhoma dite
-                </option>
+            <a href="#" id="logoutButton">
+                Dil
+            </a>
 
-                <option value="Dhoma gjumi">
-                    Dhoma gjumi
-                </option>
+        </nav>
 
-                <option value="Kuzhina">
-                    Kuzhina
-                </option>
+    </header>
 
-                <option value="Gardëroba">
-                    Gardëroba
-                </option>
-
-            </select>
-
-
-            <label>
-                Fotografia
-            </label>
-
-            <input
-                type="file"
-                id="productImage"
-                accept="image/*">
-
-
-            <div id="imagePreview"></div>
-
-
-            <label>
-                Përshkrimi
-            </label>
-
-            <textarea
-                id="productDescription"
-                placeholder="Përshkrimi i produktit">
-            </textarea>
-
-
-            <label>
-                Dimensionet
-            </label>
-
-            <input
-                type="text"
-                id="productDimensions"
-                placeholder="P.sh. 250 x 180 cm">
-
-
-            <label>
-                Materiali
-            </label>
-
-            <input
-                type="text"
-                id="productMaterial"
-                placeholder="P.sh. MDF, dru...">
-
-
-           <button
-    id="addProductButton"
-    type="button"
-    onclick="addProduct()">
-
-    Shto produkt
-
-</button>
-
-        </section>
-
-
-        <!-- PRODUKTET -->
-
-        <section class="section">
-
-            <div class="section-title">
-
-                <p>
-                    TIME DESIGN
-                </p>
-
-                <h2>
-                    Produktet
-                </h2>
-
-            </div>
-
-            <div
-                id="adminProducts"
-                class="products">
-            </div>
-
-        </section>
-
-    </div>
 
 
     <!-- ================================= -->
-    <!-- LOGIN + ADMIN SYSTEM -->
+    <!-- SHTO PRODUKT -->
     <!-- ================================= -->
 
-    <script>
+    <section id="add-product" class="section">
 
-        const ADMIN_USERNAME = "timedesign";
-        const ADMIN_PASSWORD = "1234567890";
+        <div class="section-title">
 
+            <p>ADMIN</p>
 
-        const loginPage =
-            document.getElementById("loginPage");
+            <h2>
+                Shto produkt
+            </h2>
 
-        const adminPanel =
-            document.getElementById("adminPanel");
-
-        const loginButton =
-            document.getElementById("loginButton");
-
-        const logoutButton =
-            document.getElementById("logoutButton");
+        </div>
 
 
-        function showAdminPanel() {
+        <label>
+            Emri i produktit
+        </label>
 
-            loginPage.style.display = "none";
-
-            adminPanel.style.display = "block";
-
-        }
-
-
-        function loginAdmin() {
-
-            const username =
-                document.getElementById(
-                    "loginUsername"
-                ).value.trim();
-
-            const password =
-                document.getElementById(
-                    "loginPassword"
-                ).value;
+        <input
+            type="text"
+            id="productName"
+            placeholder="P.sh. Sallon Modern"
+        >
 
 
-            if (
-                username === ADMIN_USERNAME &&
-                password === ADMIN_PASSWORD
-            ) {
+        <label>
+            Kategoria
+        </label>
 
-                sessionStorage.setItem(
-                    "timeDesignAdmin",
-                    "true"
-                );
+        <select id="productCategory">
 
-                document.getElementById(
-                    "loginError"
-                ).style.display = "none";
+            <option value="Dhoma dite">
+                Dhoma dite
+            </option>
 
-                showAdminPanel();
+            <option value="Dhoma gjumi">
+                Dhoma gjumi
+            </option>
 
-            } else {
+            <option value="Kuzhina">
+                Kuzhina
+            </option>
 
-                document.getElementById(
-                    "loginError"
-                ).style.display = "block";
+            <option value="Gardëroba">
+                Gardëroba
+            </option>
 
-            }
-
-        }
+        </select>
 
 
-        function logoutAdmin() {
+        <label>
+            Fotografia
+        </label>
 
-            sessionStorage.removeItem(
-                "timeDesignAdmin"
-            );
-
-            location.reload();
-
-        }
-
-
-        loginButton.addEventListener(
-            "click",
-            loginAdmin
-        );
+        <input
+            type="file"
+            id="productImage"
+            accept="image/*"
+        >
 
 
-        logoutButton.addEventListener(
-            "click",
-            function(event) {
-
-                event.preventDefault();
-
-                logoutAdmin();
-
-            }
-        );
+        <div id="imagePreview"></div>
 
 
-        document
-            .getElementById("loginPassword")
-            .addEventListener(
-                "keydown",
-                function(event) {
+        <label>
+            Përshkrimi
+        </label>
 
-                    if (event.key === "Enter") {
-                        loginAdmin();
-                    }
-
-                }
-            );
+        <textarea
+            id="productDescription"
+            placeholder="Përshkrimi i produktit"
+        ></textarea>
 
 
-        if (
-            sessionStorage.getItem(
-                "timeDesignAdmin"
-            ) === "true"
-        ) {
+        <label>
+            Dimensionet
+        </label>
 
-            showAdminPanel();
-
-        }
-
-    </script>
+        <input
+            type="text"
+            id="productDimensions"
+            placeholder="P.sh. 250 x 180 cm"
+        >
 
 
-    <!-- ADMIN JS -->
+        <label>
+            Materiali
+        </label>
 
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        <input
+            type="text"
+            id="productMaterial"
+            placeholder="P.sh. MDF, dru..."
+        >
+
+
+        <button
+            id="addProductButton"
+            type="button"
+            onclick="addProduct()"
+        >
+            Shto produkt
+        </button>
+
+    </section>
+
+
+
+    <!-- ================================= -->
+    <!-- PRODUKTET -->
+    <!-- ================================= -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <p>
+                TIME DESIGN
+            </p>
+
+            <h2>
+                Produktet
+            </h2>
+
+        </div>
+
+
+        <div
+            id="adminProducts"
+            class="products"
+        ></div>
+
+    </section>
+
+</div>
+
+
+
+<!-- ================================= -->
+<!-- SUPABASE -->
+<!-- ================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="admin.js"></script>
+
 
 </body>
 
