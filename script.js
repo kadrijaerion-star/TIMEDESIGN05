@@ -338,3 +338,80 @@ document.addEventListener(
 
     }
 );
+// =====================================
+// PASSWORD RESET SUPABASE
+// =====================================
+
+async function resetPassword() {
+
+    const password =
+        document.getElementById("new-password")?.value;
+
+    const confirmPassword =
+        document.getElementById("confirm-password")?.value;
+
+    const message =
+        document.getElementById("reset-message");
+
+
+    if (!password || !confirmPassword) {
+
+        if (message) {
+            message.textContent =
+                "Plotëso të dy fushat.";
+        }
+
+        return;
+    }
+
+
+    if (password !== confirmPassword) {
+
+        if (message) {
+            message.textContent =
+                "Password-at nuk përputhen.";
+        }
+
+        return;
+    }
+
+
+    if (password.length < 6) {
+
+        if (message) {
+            message.textContent =
+                "Password-i duhet të ketë të paktën 6 karaktere.";
+        }
+
+        return;
+    }
+
+
+    const {
+        error
+    } = await supabaseClient.auth.updateUser({
+        password: password
+    });
+
+
+    if (error) {
+
+        console.error(error);
+
+        if (message) {
+            message.textContent =
+                "Ndodhi një gabim. Provo përsëri.";
+        }
+
+        return;
+    }
+
+
+    if (message) {
+
+        message.textContent =
+            "Password-i u ndryshua me sukses!";
+
+    }
+
+}
